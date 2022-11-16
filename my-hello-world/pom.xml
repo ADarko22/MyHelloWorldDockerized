@@ -13,22 +13,10 @@
 
   <properties>
     <application.mainclass>MyHelloWorld</application.mainclass>
-    <dockerfile.maven.version>1.4.12</dockerfile.maven.version>
-    <docker.repository>adarko22/tutorials</docker.repository>
+    <dockerfile.maven.version>1.4.13</dockerfile.maven.version>
+    <docker.repository>adarko22/tutorial</docker.repository> <!-- replace with the name of your repository on docker.io -->
   </properties>
 
-  <!-- add to settings.xml:
-        <server>
-          <id>docker.io</id>
-          <username>FOO</username>
-          <password>BAR</password>
-        </server>
-
-        <pluginGroups>
-            <pluginGroup>com.spotify</pluginGroup>
-        </pluginGroups>
-    mvn dockerfile:push -Ddockerfile.useMavenSettingsForAuth=true
--->
   <build>
     <plugins>
       <plugin>
@@ -63,14 +51,16 @@
             <id>default</id>
             <goals>
               <goal>build</goal>
+              <goal>tag</goal>
               <goal>push</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
+          <contextDirectory>${project.basedir}</contextDirectory>
           <useMavenSettingsForAuth>true</useMavenSettingsForAuth> <!-- use server config from settings.xml -->
-          <repository>${docker.repository}/${project.artifactId}</repository>
-          <tag>latest</tag>
+          <repository>${docker.repository}</repository>
+          <tag>${project.artifactId}</tag>
           <buildArgs>
             <JAR_FILE>${project.build.finalName}-jar-with-dependencies.jar</JAR_FILE>
           </buildArgs>

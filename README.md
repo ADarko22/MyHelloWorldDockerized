@@ -14,9 +14,9 @@ That isolation leverages kernel namespaces and cgroups. To summarize, a containe
 - is isolated from other containers and runs its own software, binaries, and configurations
 
 When running a container, it uses an isolated filesystem, provided by a container image.
-The imagemmust contain everything needed to run an application: all dependencies, configurations, scripts, binaries, etc.
+The image must contain everything needed to run an application: all dependencies, configurations, scripts, binaries, etc.
 
-## Docker
+### Docker
 
 **Docker** allows to create independent and isolated environments where to launch and deploy applications. 
 These environments are then called *containers*. 
@@ -30,12 +30,13 @@ Each module uses the following two maven plugins for building the Docker Image:
 
 ### maven-assembly-plugin
 
-todo
+The Assembly Plugin for Maven enables to combine the project output into a single distributable archive 
+that also contains dependencies, modules, site documentation, and other files. More in [usage documentation](https://maven.apache.org/plugins/maven-assembly-plugin/usage.html)
 
 ### dockerfile-maven-plugin
 
-todo:  setup authentication to repo! https://github.com/spotify/dockerfile-maven/blob/master/docs/authentication.md
-
+We'll be using [Authentication with maven settings.xml](https://github.com/spotify/dockerfile-maven/blob/master/docs/authentication.md#authenticating-with-maven-settingsxml).
+More in [documentation](https://github.com/spotify/dockerfile-maven)
 
 ### Create Docker.io account and repo
 Docker Hub repositories allow you share container images with your team, customers, or the Docker community at large.
@@ -58,13 +59,25 @@ add to settings.xml:
 </server>
 ```
 
-run: mvn clean install -Ddockerfile.useMavenSettingsForAuth=true
+## Deploying
+
+`mvn -Dmaven.deploy.skip` deploy to deploy only Docker images (default deploy phase is skipped) 
+
+This is necessary because we haven't configured any distribution management 
+for maven default deploy (see [Distribution Management](https://maven.apache.org/pom.html#Distribution_Management)
+
+In case something goes wrong try to:
+1) logout from docker: `docker logout`
+2) delete config.json: `rm ~/.docker/config.json`
+3) restart docker: `service docker restart`
+4login into docker using your docker.io credentials: `docker login docker.io`
 
 TODO: 
-    CLEAN UP description
-    document creation of private REPO
-    find a way to run DOCKER not as SUDO -> Docker Desktop is not running in root mode!
-    FIND HOW TO PUSH IMAGE TO REPO!
+    1) CLEAN UP description
+    2) document creation of private REPO
+    3) describe the Dockerfile and the assembly.xml used by dockerfile-maven-plugin
+    4) describe authentication used for dockerfile-maven-plugin
+    5) describe deploy instruction
 
     add hello world that listen on a PORT that is configured from a command line arg
     add hello world that listen on a PORT that is configured from an xml file passed through command line arg
