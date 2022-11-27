@@ -12,9 +12,11 @@
   <artifactId>my-hello-world</artifactId>
 
   <properties>
+    <!-- Specify the name of your main class, i.e. the entry point for you application! Only one per module! -->
     <application.mainclass>MyHelloWorld</application.mainclass>
+    <!-- Your repository on docker.io! -->
+    <docker.repository>adarko22/tutorial</docker.repository>
     <dockerfile.maven.version>1.4.13</dockerfile.maven.version>
-    <docker.repository>adarko22/tutorial</docker.repository> <!-- replace with the name of your repository on docker.io -->
   </properties>
 
   <build>
@@ -24,10 +26,12 @@
         <configuration>
           <archive>
             <manifest>
+              <!-- The entry point of your application: the main class -->
               <mainClass>${application.mainclass}</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
+            <!-- This descriptor allows to package together all the dependencies required to run your application! -->
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
         </configuration>
@@ -57,9 +61,13 @@
           </execution>
         </executions>
         <configuration>
+          <!-- Specify the directory containing your Dockerfile -->
           <contextDirectory>${project.basedir}</contextDirectory>
-          <useMavenSettingsForAuth>true</useMavenSettingsForAuth> <!-- use server config from settings.xml -->
+          <!-- Enables authentication to the repository, i.e. Docker.io, via settings.xml -->
+          <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+          <!-- Your repository; usually <username>/<app-name> -->
           <repository>${docker.repository}</repository>
+          <!-- The tag to use for the image being built and pushed to the repository; usually <app-version>. Default is 'latest' -->
           <tag>${project.artifactId}</tag>
           <buildArgs>
             <JAR_FILE>${project.build.finalName}-jar-with-dependencies.jar</JAR_FILE>
